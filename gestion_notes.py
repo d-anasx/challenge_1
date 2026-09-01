@@ -1,53 +1,46 @@
-
-
-
-
-fname = input("enter your first name : ")
-lname = input("enter your last  name : ")
-
+fname = input("Enter your first name: ")
+lname = input("Enter your last name: ")
 
 notes = []
 
 x = 0
-while x < 3 : 
-    while True :
-        user_input =  input(f"enter your note {x+1} : ")
-        try :
+
+while x < 3:
+    while True:
+        user_input = input(f"Enter your note {x + 1}: ")
+
+        try:
             note = float(user_input)
-            if note > 0 and note <= 20 :
+
+            if 0 <= note <= 20:
                 notes.append(note)
-                x = x+1
+                x += 1
                 break
-            
-        except ValueError :
-            print(f'{user_input} is not a valid number')
+            else:
+                print("The note must be between 0 and 20.")
+
+        except ValueError:
+            print(f"{user_input} is not a valid number")
 
 
-def average() :
-    sum = 0
-    for i in notes:
-        sum =sum + i
-    avg = round(sum / len(notes),2)
-    return avg
+def calculer_moyenne(notes):
+    total = 0
 
-def appreciation(avg) :
-    if avg >= 10 :
-        return 'passable'
-    if avg >=12 :
-        return 'assez bien'
-    if avg >= 14 :
-        return 'bien'
-    if avg >=16 :
-        return 'tres bien'
-    if avg >=18 :
-        return 'exellent'
+    for note in notes:
+        total += note
+
+    return round(total / len(notes), 2)
 
 
-
-
-
-
-
-
+def appreciation(moyenne):
+    if moyenne < 10:
+        return "Insuffisant"
+    elif moyenne < 12:
+        return "Passable"
+    elif moyenne < 16:
+        return "Bien"
+    else:
+        return "Tres bien"
+    
 
 
