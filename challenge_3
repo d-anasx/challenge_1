@@ -198,7 +198,7 @@ def lire_fichier_securise(chemin):
             print(f"Contenu du fichier ({len(lignes)} lignes lues).")
             return lignes
     except FileNotFoundError:
-        print(f'Erreur : le fichier "{chemin}" n’existe pas.')
+        print(f'Erreur : le fichier "{chemin}" n existe pas.')
     except PermissionError:
         print(f'Erreur : permission refusee pour acceder a "{chemin}".')
 
@@ -214,7 +214,7 @@ def calculer_moyenne_csv(chemin):
     try:
         with open(chemin, "r", encoding="utf-8") as fichier:
             lecteur = csv.reader(fichier)
-            next(lecteur, None)  # En-tête : nom,note
+            next(lecteur, None) 
             
             for ligne in lecteur:
                 if not ligne:
