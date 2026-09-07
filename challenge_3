@@ -1,0 +1,298 @@
+#bloc 1 
+
+#1-2
+def division_securisee(a,b):
+    try :
+        x = a / b
+        print(x) 
+    except Exception as e :
+        print(e) 
+
+# division_securisee(10, 2)
+# division_securisee(10, 0)
+
+
+#1-3
+def convertir_entier(v):
+    try :
+        result = int(v)
+        print(result)
+    except Exception as e :
+        print(f'Erreur : "{v}" n est pas un entier valide.')
+
+# convertir_entier(42)
+# convertir_entier("anas")
+
+
+
+#1-4
+notes = [12, 15, 9]
+
+def acceder_element(liste, index):
+    try:
+        element = liste[index]
+        print(element)
+        return element
+    except IndexError:
+        error_msg = f"Error: index {index} out of list length: {len(liste)}"
+        print(error_msg)
+
+# acceder_element(notes, 1)
+# acceder_element(notes, 10)
+
+
+
+#1-5
+eleve = {"nom": "Sara", "age": 20}
+
+def acceder_cle(dictionnaire, cle):
+    try:
+        valeur = dictionnaire[cle]
+        print(valeur)
+        return valeur
+    except KeyError:
+        error_msg = f'Error: key "{cle}" does not exist.'
+        print(error_msg)
+
+# acceder_cle(eleve, "nom")
+# acceder_cle(eleve, "email")
+
+
+
+
+
+#1-6
+def traiter_valeur(valeur):
+    try:
+        resultat = int(valeur)
+    except ValueError:
+        error_msg = f'Error: "{valeur}" is not convertible.'
+        print(error_msg)
+    else:
+        success_msg = f"Conversion successful: {resultat}"
+        print(success_msg)
+    finally:
+        end_msg = "Processing completed."
+        print(end_msg)
+
+# traiter_valeur("8")
+# traiter_valeur("x")
+
+
+
+
+# bloc 2 
+
+# 2.1 — Raising an exception with raise
+def verifier_age(age):
+    if age < 0:
+        raise ValueError(f"l’age ne peut pas etre negatif ({age}).")
+    
+    success_msg = f"Age valide : {age}"
+    print(success_msg)
+
+# verifier_age(25)
+# verifier_age(-3)
+
+
+
+# 2.2 — raise with no arguments
+def traiter_liste_de_valeurs(liste):
+    for item in liste:
+        try:
+            valeur = int(item)
+        except ValueError:
+            log_msg = f'Log : valeur "{item}" invalide, exception relancee.'
+            print(log_msg)
+            raise
+
+# traiter_liste_de_valeurs(["3", "9", "x", "5"]) 
+
+
+
+# 2.3 — Custom exception class inheriting from Exception
+class StockInsuffisantError(Exception):
+    def __init__(self, produit, demande, disponible):
+        message = f'stock insuffisant pour "{produit}" (demande : {demande}, disponible : {disponible})'
+        super().__init__(message)
+
+
+
+
+# 2.4 — Using the custom exception in business logic
+def retirer_stock(stock, produit, quantite):
+    if produit not in stock:
+        raise KeyError(f'Le produit "{produit}" n\'existe pas dans le stock.')
+    
+    disponible = stock[produit]
+    
+    if quantite > disponible:
+        raise StockInsuffisantError(produit, quantite, disponible)
+    
+    stock[produit] -= quantite
+    success_msg = f"Retrait effectue : {quantite} {produit}."
+    print(success_msg)
+
+stock = {"pommes": 20, "bananes": 4}
+
+# retirer_stock(stock, "pommes", 5)
+# retirer_stock(stock, "bananes", 10)
+
+
+
+
+
+
+#bloc 2
+
+#3-1
+
+def ecrire_liste_courses(chemin, articles):
+    with open(chemin, "w", encoding="utf-8") as fichier:
+        lignes = [f"{article}\n" for article in articles]
+        fichier.writelines(lignes)
+
+articles = ["pommes", "lait", "pain"]
+ecrire_liste_courses("courses.txt", articles)
+
+
+#3-2
+
+def ajouter_article(chemin, article):
+    with open(chemin, "a", encoding="utf-8") as fichier:
+        fichier.write(f"{article}\n")
+
+# ajouter_article("courses.txt", "oeufs")
+
+
+#3-3
+
+def lire_fichier(chemin):
+    with open(chemin, "r", encoding="utf-8") as fichier:
+        contenu = fichier.readlines()
+        print(contenu)
+        return contenu
+
+# lire_fichier("courses.txt")
+
+
+
+#3-4
+def compter_lignes(chemin):
+    with open(chemin, "r", encoding="utf-8") as fichier:
+        total = sum(1 for line in fichier)
+        output_msg = f"Nombre de lignes : {total}"
+        print(output_msg)
+        return total
+
+# compter_lignes("courses.txt")
+
+
+#bloc 4
+
+#4-1
+def lire_fichier_securise(chemin):
+    try:
+        with open(chemin, "r", encoding="utf-8") as fichier:
+            lignes = fichier.readlines()
+            print(f"Contenu du fichier ({len(lignes)} lignes lues).")
+            return lignes
+    except FileNotFoundError:
+        print(f'Erreur : le fichier "{chemin}" n’existe pas.')
+    except PermissionError:
+        print(f'Erreur : permission refusee pour acceder a "{chemin}".')
+
+# lire_fichier_securise("courses.txt")
+# lire_fichier_securise("inexistant.txt")
+
+#4-2
+
+import csv
+
+def calculer_moyenne_csv(chemin):
+    notes = []
+    try:
+        with open(chemin, "r", encoding="utf-8") as fichier:
+            lecteur = csv.reader(fichier)
+            next(lecteur, None)  # En-tête : nom,note
+            
+            for ligne in lecteur:
+                if not ligne:
+                    continue
+                nom, note_str = ligne[0], ligne[1]
+                try:
+                    note = float(note_str)
+                    notes.append(note)
+                except ValueError:
+                    print(f'Attention : note invalide pour "{nom}" ("{note_str}"), ligne ignoree.')
+                    
+        if notes:
+            moyenne = round(sum(notes) / len(notes), 2)
+            print(f"Moyenne calculee ({len(notes)} notes valides) : {moyenne}")
+            return moyenne
+        else:
+            print("Aucune note valide trouvee.")
+    except FileNotFoundError:
+        print(f'Erreur : le fichier "{chemin}" n’existe pas.')
+
+# Test
+with open("notes.csv", "w", encoding="utf-8") as f:
+    f.write("nom,note\nAli,14\nSara,18\nLina,abc\nKarim,9\n")
+
+# calculer_moyenne_csv("notes.csv")
+
+
+#4-3
+
+class StockInsuffisantError(Exception):
+    def __init__(self, produit, demande, disponible):
+        self.produit = produit
+        self.demande = demande
+        self.disponible = disponible
+        super().__init__(f"stock insuffisant (demande {demande}, dispo {disponible})")
+
+
+def traiter_journal_commandes(stock, commandes_brutes, chemin_journal="journal.txt"):
+        with open(chemin_journal, "w", encoding="utf-8") as journal:
+            for commande in commandes_brutes:
+                try:
+                    produit, quantite_str = commande.split(",")
+                    
+                    if produit not in stock:
+                        raise KeyError("produit inconnu")
+                        
+                    try:
+                        quantite = int(quantite_str)
+                    except ValueError:
+                        raise ValueError(f'quantite invalide ("{quantite_str}")')
+                        
+                    disponible = stock[produit]
+                    if quantite > disponible:
+                        raise StockInsuffisantError(produit, quantite, disponible)
+                        
+                    stock[produit] -= quantite
+                    entree = f"[OK] {produit} :-{quantite} (reste {stock[produit]})\n"
+                    
+                except KeyError:
+                    entree = f"[ERREUR] {produit} : produit inconnu\n"
+                except ValueError as err:
+                    entree = f"[ERREUR] {produit} : {err}\n"
+                except StockInsuffisantError as err:
+                    entree = f"[ERREUR] {produit} : {err}\n"
+                    
+                journal.write(entree)
+    
+
+
+stock_test = {"pommes": 20, "bananes": 4, "oranges": 15}
+commandes_brutes_test = [
+    "pommes,5",
+    "bananes,10",
+    "kiwis,2",
+    "oranges,abc",
+    "oranges,5",
+]
+
+traiter_journal_commandes(stock_test, commandes_brutes_test)
+
+
